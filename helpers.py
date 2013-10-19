@@ -47,7 +47,15 @@ def resolvconf_nameservers():
     for line in open('/etc/resolv.conf'):
         words = line.lower().split()
         if len(words) >= 2 and words[0] == 'nameserver':
-            l.append(words[1])
+            second_word = words[1]
+            # os x fix... only add ipv4 nameservers for now...
+            # 10.8.5 example:
+            #   nameserver 192.168.1.1
+            #   nameserver 2001:4888:68:ff00:608:d::
+            #   nameserver 2001:4888:61:ff00:604:d::
+            if second_word.find(':') == -1:
+                # if the second word doesn't include a colon
+                l.append(words[1])
     return l
 
 
